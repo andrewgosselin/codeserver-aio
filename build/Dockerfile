@@ -1,6 +1,12 @@
+FROM node:latest AS node_base
 FROM ubuntu:20.04
 
 ARG USER=coder
+
+ENV DEBIAN_FRONTEND noninteractive
+
+COPY --from=node_base /usr/local/bin /usr/local/bin
+COPY --from=node_base /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/npm
 
 RUN apt update \
     && apt install -y ca-certificates \
@@ -54,7 +60,7 @@ RUN set -eux; \
 
 COPY scripts/modprobe scripts/scripts/init-docker.sh scripts/entrypoint.sh /usr/local/bin/
 COPY config/supervisor/ /etc/supervisor/conf.d/
-# COPY logger.sh /opt/bash-utils/logger.sh
+COPY scripts/helpers/logger.sh /opt/bash-utils/logger.sh
 
 RUN chmod +x /usr/local/bin/init-docker.sh \
 	/usr/local/bin/entrypoint.sh \
@@ -96,15 +102,17 @@ RUN groupadd docker \
     && echo "${USER} ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/${USER} \
     && chmod 0440 /etc/sudoers.d/${USER}
 
-
 RUN mkdir -p /init
 COPY scripts /init
 
 RUN chmod -R 777 /init
 
-RUN chmod +x /init/*
-RUN chmod +x /init/helpers/*
-RUN chmod +x /init/scripts/*
-RUN chmod +x /init/custom-init/*
+RUN chmod +x /init/*.sh
+RUN chmod +x /init/helpers/*.sh
+RUN chmod +x /init/scripts/*.sh
+RUN chmod +x /init/custom-init/*.sh
+
+USER ${USER}
+WORKDIR /home/${USER}
 
 ENTRYPOINT ["entrypoint.sh"]
