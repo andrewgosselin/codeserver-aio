@@ -27,7 +27,7 @@ resource "coder_agent" "main" {
   os             = "linux"
   startup_script = <<-EOT
     set -e
-    /init/scripts/entrypoint.sh
+    entrypoint.sh
   EOT
 
   # These environment variables allow you to make Git commits right away after creating a

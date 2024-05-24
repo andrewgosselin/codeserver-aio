@@ -9,6 +9,7 @@ sh get-config-from-gist.sh || exit 1
 # Parse extension list
 sh parse-extension-list.sh || exit 1
 
+mkdir -p ~/.local/share/code-server/User
 cp -rf /init/settings.json ~/.local/share/code-server/User/settings.json
 
 # Install VSCode extensions using the parsed list
