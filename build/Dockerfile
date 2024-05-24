@@ -85,6 +85,7 @@ RUN apt-get update \
 	golang \
 	sudo \
 	vim \
+	nano \
 	wget \
     jq \
 	&& rm -rf /var/lib/apt/lists/*
