@@ -85,6 +85,8 @@ RUN apt-get update \
 	golang \
 	sudo \
 	vim \
+	zip \
+	unzip \
 	nano \
 	wget \
     jq \
